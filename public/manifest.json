@@ -1,0 +1,9 @@
+{
+  "author": "Thermetrics",
+  "appId": "6a7180f9d0782f14da8c4925",
+  "version": "1.0.0",
+  "versionDescription": "HR Dashboard — employee overview, PTO management",
+  "config": {
+    "fields": {}
+  }
+}
