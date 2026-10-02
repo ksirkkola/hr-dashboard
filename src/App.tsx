@@ -8,6 +8,8 @@ import { useRefresh } from './hailer/use-refresh';
 import OverviewPanel from './components/OverviewPanel';
 import PTOPanel from './components/PTOPanel';
 import BonusPanel from './components/BonusPanel';
+import OnboardingPanel from './components/OnboardingPanel';
+import DocumentsPanel from './components/DocumentsPanel';
 
 export default function App() {
   const { api, inside, ready, settings } = useApp();
@@ -51,17 +53,21 @@ export default function App() {
       </Box>
 
       <Box px={6} pb={8}>
-        <Tabs variant="enclosed" colorScheme="blue">
+        <Tabs variant="enclosed" colorScheme="blue" isLazy>
           <TabList mb={4}>
             <Tab fontWeight="semibold">Overview</Tab>
+            <Tab fontWeight="semibold">Onboarding</Tab>
             <Tab fontWeight="semibold">PTO</Tab>
             <Tab fontWeight="semibold">Bonuses</Tab>
+            <Tab fontWeight="semibold">📄 Documents</Tab>
           </TabList>
 
           <TabPanels>
-            <TabPanel px={0}><OverviewPanel refreshKey={refreshKey} /></TabPanel>
+            <TabPanel px={0}><OverviewPanel refreshKey={refreshKey} onRefresh={refresh} /></TabPanel>
+            <TabPanel px={0}><OnboardingPanel refreshKey={refreshKey} onRefresh={refresh} /></TabPanel>
             <TabPanel px={0}><PTOPanel refreshKey={refreshKey} /></TabPanel>
             <TabPanel px={0}><BonusPanel refreshKey={refreshKey} /></TabPanel>
+            <TabPanel px={0}><DocumentsPanel refreshKey={refreshKey} onRefresh={refresh} /></TabPanel>
           </TabPanels>
         </Tabs>
       </Box>

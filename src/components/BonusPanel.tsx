@@ -10,10 +10,13 @@ import { useEffect, useState } from 'react';
 import { useApp } from '../hailer/use-app';
 
 const INSIGHT_BONUS = '6a71852f891833385a34d7aa';
+const INSIGHT_EMPLOYEE_DIRECTORY = '6a9aafbda51ebb56d30d4896';
 const WF_BONUS      = '6a7184b34af977ffe55b4dc7';
 const PHASE_DRAFT   = '6a7184e8693253992c87ad61';
 const PHASE_APPROVED = '6a7184ea693253992c87ad7f';
 const PHASE_PAID    = '6a7184ed693253992c87adcc';
+const ED_PHASE_ACTIVE = '6a4b9b64fd37515ffb36cd6b';
+const ED_PHASE_CONTRACTOR = '6a4b9b64fd37515ffb36cd9e';
 
 // Field IDs
 const BF_EMPLOYEE   = '6a7184f04af977ffe55b4f0d';
@@ -83,6 +86,7 @@ export default function BonusPanel({ refreshKey = 0 }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [rows, setRows]         = useState<Record<string, unknown>[]>([]);
+  const [activeEmployeeNames, setActiveEmployeeNames] = useState<Set<string>>(new Set());
   const [loading, setLoading]   = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [actionId, setActionId] = useState<string | null>(null);
@@ -103,9 +107,26 @@ export default function BonusPanel({ refreshKey = 0 }: Props) {
   useEffect(() => {
     if (!inside) return;
     setLoading(true);
-    hailer!.insight.data(INSIGHT_BONUS, { update: true })
-      .then(data => { setRows(parseInsight(data)); setLoading(false); })
-      .catch(() => setLoading(false));
+    Promise.all([
+      hailer!.insight.data(INSIGHT_BONUS, { update: true }),
+      hailer!.insight.data(INSIGHT_EMPLOYEE_DIRECTORY, { update: true }),
+    ]).then(([bonus, emp]) => {
+      setRows(parseInsight(bonus));
+      // Employee Directory has no link to actual Hailer accounts, so this is a
+      // best-effort name match — it narrows the picker to active/contractor
+      // employees but isn't a guaranteed-correct lookup for every org.
+      const eh = emp.headers;
+      const nameIdx = eh.indexOf('name');
+      const phaseIdx = eh.indexOf('phaseId');
+      const names = new Set<string>();
+      emp.rows.forEach(row => {
+        if (row[phaseIdx] === ED_PHASE_ACTIVE || row[phaseIdx] === ED_PHASE_CONTRACTOR) {
+          names.add(String(row[nameIdx] || '').toLowerCase());
+        }
+      });
+      setActiveEmployeeNames(names);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, [inside, refreshKey]);
 
   function userName(id: string | null): string {
@@ -192,7 +213,12 @@ export default function BonusPanel({ refreshKey = 0 }: Props) {
 
   if (loading) return <Flex justify="center" align="center" h="300px"><Spinner size="xl" /></Flex>;
 
-  const employees = Object.values(user.map);
+  // Filtered to active/contractor employees when Employee Directory matching found any;
+  // falls back to every workspace user if the name-matching heuristic found nothing,
+  // so the picker is never left empty due to a name mismatch.
+  const allUsers = Object.values(user.map);
+  const activeUsers = allUsers.filter(u => activeEmployeeNames.has(`${u.firstname} ${u.lastname}`.toLowerCase()));
+  const employees = activeUsers.length > 0 ? activeUsers : allUsers;
 
   return (
     <Box>
