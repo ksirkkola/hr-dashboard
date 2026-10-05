@@ -1,8 +1,8 @@
 {
   "author": "Thermetrics",
   "appId": "6a7180f9d0782f14da8c4925",
-  "version": "1.15.0",
-  "versionDescription": "Added the missing 'Documents' tab (admin upload/manage view for Employee + Company Documents, mirroring what's shown read-only in the \ud83c\udf34 My Employment Info app) and an 'Upcoming Anniversaries' card on Overview \u2014 both reconstructed from screenshots of the live app since this repo's local copy had fallen behind. Also re-applied a known fix from the version gap: PTO Approve/Deny/Cancel now sets the required 'Approved By' field (was failing validation silently before).",
+  "version": "1.16.0",
+  "versionDescription": "Added a new 'Employee Directory' tab \u2014 searchable list of active employees, click one to see their full Employment card (start date, tenure, next anniversary, position, team, supervisor, employment type, hours, contact info, benefits). Also fixed 9 HR Dashboard insights (PTO Balances/Requests, Bonus Records, Overview Counts, Disciplinary Actions, Exit Checklist Status, Job Applications Funnel, Onboarding Status/Checklists, Employee Directory lookup) that were scoped to a single user instead of the whole workspace \u2014 these would have shown empty/broken panels for anyone but that one user.",
   "config": {
     "fields": {}
   }
