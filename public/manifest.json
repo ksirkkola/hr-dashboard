@@ -1,8 +1,8 @@
 {
   "author": "Thermetrics",
   "appId": "6a7180f9d0782f14da8c4925",
-  "version": "1.16.0",
-  "versionDescription": "Added a new 'Employee Directory' tab \u2014 searchable list of active employees, click one to see their full Employment card (start date, tenure, next anniversary, position, team, supervisor, employment type, hours, contact info, benefits). Also fixed 9 HR Dashboard insights (PTO Balances/Requests, Bonus Records, Overview Counts, Disciplinary Actions, Exit Checklist Status, Job Applications Funnel, Onboarding Status/Checklists, Employee Directory lookup) that were scoped to a single user instead of the whole workspace \u2014 these would have shown empty/broken panels for anyone but that one user.",
+  "version": "1.17.0",
+  "versionDescription": "Employee Directory tab: added Home Address and a permanent Emergency Contact section, an editable HR Notes area (private, not shown to the employee), a new Salary History log (new workflow \u2014 record raises/adjustments with effective date, type, and reason; append-only, corrections are new entries not edits), and a Bonus History section pulling from existing Bonus Records. Bonus History matches employees to their bonus records via PTO Balance's user link, since Bonus Record is keyed by user account rather than directory record \u2014 shows 'no linked user account' for anyone without a PTO Balance set up yet.",
   "config": {
     "fields": {}
   }
